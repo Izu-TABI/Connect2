@@ -2,14 +2,12 @@
 
 const fetch = require('node-fetch');
 const https = require('https');
-
 const result = require('dotenv').config()
 const http = require('http');
 const express = require("express")
 const fs = require('fs')
 const path = require('path')
 const Discord = require('discord.js');
-const ytdl = require("ytdl-core");
 const {
   Client,
   Collection, 
@@ -19,25 +17,11 @@ const {
   ActivityType, 
   Partials,
 } = require('discord.js');
-
-
 const { 
   getVoiceConnection, 
   createAudioPlayer, 
-  NoSubscriberBehavior,
   createAudioResource, 
-  entersState,
-  AudioPlayerStatus,
-  StreamType
 } = require('@discordjs/voice');
-
-const app = express();
-
-
-const TOKEN = process.env.TOKEN
-const GUILD_ID = process.env.GUILD_ID
-const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID
-const CALL_CHANNEL_ID = process.env.CALL_CHANNEL_ID
 
 const client = new Client({
   intents: [
@@ -51,6 +35,11 @@ const client = new Client({
   ],
   'partials': [Partials.Channel]
 });
+
+const TOKEN = process.env.TOKEN
+const GUILD_ID = process.env.GUILD_ID
+const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID
+const CALL_CHANNEL_ID = process.env.CALL_CHANNEL_ID
 
 
 client.commands = new Collection();
@@ -71,7 +60,7 @@ for (const file of commandFiles) {
 
 https.createServer(function(req, res) {
   res.write("online");
-}).listen(8080, '127.0.0.1');
+}).listen(8080);
 
 client.once('ready', async () => {
   client.user.setStatus('online')
@@ -133,7 +122,7 @@ async function callApi(contents) {
 }
 
 
-function downloadAudio(voiceUrl2, joinUser) {
+function downloadAudio(voiceUrl2) { //リンク先からmp3ファイルをダウンロードしてくる
   try {
     return new Promise((resolve, reject) => {
       https.get(voiceUrl2, (res) => {
@@ -144,7 +133,6 @@ function downloadAudio(voiceUrl2, joinUser) {
           console.log(chunk);
         });
 
-        // The whole response has been received. Print out the result.
         res.on('end', (res) => {
           let dest = "audio.mp3";
           let stream = fs.createWriteStream(dest);
@@ -160,7 +148,7 @@ function downloadAudio(voiceUrl2, joinUser) {
   }
 }
 
-
+// mp3ファイルを再生
 function playAudio() {
   const connection = getVoiceConnection(GUILD_ID)
   const player = createAudioPlayer();
@@ -176,6 +164,7 @@ function playAudio() {
   });
 }
 
+//APIを連続で叩かないようにする
 let timer = 0;
 
 setInterval(() => {
@@ -188,13 +177,13 @@ setInterval(() => {
 client.on("voiceStateUpdate", async (oldState, newState) => {
   const oldVoice = oldState.channelId;
   const newVoice = newState.channelId;
-  const joinUser = oldState.member.user.username;
-  const connection = getVoiceConnection(GUILD_ID)
+  const joinUser = oldState.member.user.username; //チャンネルに入ったユーザーの名前を取得
+  const connection = getVoiceConnection(GUILD_ID);
   
   if (oldVoice != newVoice) {
     if (oldVoice == null) { 
-      if (connection && oldState.member.user.bot === true && timer > 5) {
-        timer = 0
+      if (connection && oldState.member.user.bot === true && timer > 5) {//botの場合
+        timer = 0;
         const contents = '私はログツーです。音声で入退出状況をお伝えします。'
         new Promise((resolve, reject) => {
           resolve(callApi(contents));
@@ -204,10 +193,10 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
         }).then(() => {
           setTimeout(() => {
             playAudio();
-          }, 2000)
+          }, 2000);
         })
       } else if (connection && timer > 5) {
-        timer = 0
+        timer = 0;
         const contents = joinUser+"さんが入室しました。"
         new Promise((resolve, reject) => {
           resolve(callApi(contents));
@@ -217,7 +206,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
         }).then(() => {
           setTimeout(() => {
             playAudio();
-          }, 2000)  
+          }, 2000);  
         })
       }
       
@@ -245,7 +234,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
             }).then(() => {
               setTimeout(() => {
                 playAudio();
-              }, 2000)
+              }, 2000);
             })
         }
       }
