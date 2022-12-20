@@ -12,20 +12,20 @@ The bot uses the VOICEVOX API for its voice.
 * discordjs/opus 0.8.0
 * discordjs/voice 0.14.0
 * dotenv 16.0.3
-* fetch 1.1.0
+* node-fetch 2.6.7
 * ffmpeg-static 5.1.0
 
 # Installation
 ```
-$ npm install discord.js
+$ npm install discord.js@14.7.1
 
 $ npm install @discordjs/opus
 
 $ npm install @discordjs/voice
 
-$ npm install npm install dotenv --save
+$ npm install dotenv --save
 
-$ npm install node-fetch
+$ npm install node-fetch@2.6.7
 
 $ npm install ffmpeg-static
 
