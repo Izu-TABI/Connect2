@@ -60,6 +60,7 @@ for (const file of commandFiles) {
 
 https.createServer(function(req, res) {
   res.write("online");
+  res.end();
 }).listen(8080);
 
 client.once('ready', async () => {
