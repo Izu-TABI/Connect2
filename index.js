@@ -109,11 +109,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
 async function callApi(contents) {
   try {
-      console.log("実行されました");
       const res = await fetch("https://api.tts.quest/v1/voicevox/?text="+contents+"&speaker=2");
       const res_json = await res.json();
       const url = await res_json.mp3DownloadUrl;
-      console.log(url)
       return url;
   } catch (err) {
     console.log(err);
@@ -130,7 +128,6 @@ function downloadAudio(voiceUrl2) { //リンク先からmp3ファイルをダウ
 
         res.on('data', function (chunk) {
           datatest.push(chunk);
-          console.log(chunk);
         });
 
         res.on('end', (res) => {
@@ -169,7 +166,6 @@ let timer = 0;
 
 setInterval(() => {
   timer++;
-  console.log(timer)
 }, 1000)  
 
 
@@ -188,7 +184,6 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
         new Promise((resolve, reject) => {
           resolve(callApi(contents));
         }).then((url) => {
-          console.log(url);
           downloadAudio(url, joinUser)
         }).then(() => {
           setTimeout(() => {
@@ -201,7 +196,6 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
         new Promise((resolve, reject) => {
           resolve(callApi(contents));
         }).then((url) => {
-          console.log(url);
           downloadAudio(url, joinUser)
         }).then(() => {
           setTimeout(() => {
@@ -229,7 +223,6 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
             new Promise((resolve, reject) => {
               resolve(callApi(contents));
             }).then((url) => {
-              console.log(url);
               downloadAudio(url, joinUser)
             }).then(() => {
               setTimeout(() => {
