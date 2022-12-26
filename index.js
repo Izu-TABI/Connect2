@@ -36,6 +36,8 @@ const client = new Client({
   'partials': [Partials.Channel]
 });
 
+const app = express();
+
 const TOKEN = process.env.TOKEN
 const GUILD_ID = process.env.GUILD_ID
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID
