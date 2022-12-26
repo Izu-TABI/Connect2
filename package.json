@@ -14,10 +14,17 @@
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "eris": "^0.16.1",
-    "fetch": "^1.1.0",
-    "ffmpeg-static": "^5.1.0",
-    "ytdl": "^1.4.1"
+    "ffmpeg-static": "^5.1.0"
   },
   "keywords": [],
-  "description": ""
+  "description": "When a member enters or exits a voice channel, the bot saves it to the text channel and announces it by voice.",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Izu-TABI/Connect2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Izu-TABI/Connect2/issues"
+  },
+  "homepage": "https://github.com/Izu-TABI/Connect2#readme"
 }
