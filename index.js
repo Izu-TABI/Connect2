@@ -4,7 +4,6 @@ const fetch = require('node-fetch');
 const https = require('https');
 const result = require('dotenv').config()
 const http = require('http');
-const express = require("express")
 const fs = require('fs')
 const path = require('path')
 const Discord = require('discord.js');
@@ -35,8 +34,6 @@ const client = new Client({
   ],
   'partials': [Partials.Channel]
 });
-
-const app = express();
 
 const TOKEN = process.env.TOKEN
 const GUILD_ID = process.env.GUILD_ID
