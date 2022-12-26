@@ -72,7 +72,6 @@ client.once('ready', async () => {
 client.on('ready', () => {
   client.user.setPresence({
     activities: [{ name: `logの管理`, type: 	ActivityType.Playing}],
-    status: 'dnd',
   });
 });
 
