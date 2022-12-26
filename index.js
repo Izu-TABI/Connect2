@@ -59,6 +59,7 @@ for (const file of commandFiles) {
 
 https.createServer(function(req, res) {
   res.write("online");
+  res.sendStatus(200);
   res.end();
 }).listen(8080);
 
