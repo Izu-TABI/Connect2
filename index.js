@@ -5,8 +5,11 @@ const https = require('https');
 const result = require('dotenv').config()
 const http = require('http');
 const fs = require('fs')
-const path = require('path')
+const { join } = require('path');
+const path = require('path');
 const Discord = require('discord.js');
+const { createReadStream } = require('fs')
+
 const {
   Client,
   Collection, 
@@ -55,9 +58,8 @@ for (const file of commandFiles) {
   
 }
 
-https.createServer(function(req, res) {
+http.createServer(function(req, res) {
   res.write("online");
-  res.sendStatus(200);
   res.end();
 }).listen(8080);
 
@@ -144,19 +146,31 @@ function downloadAudio(voiceUrl2) { //リンク先からmp3ファイルをダウ
 }
 
 // mp3ファイルを再生
+  
 function playAudio() {
-  const connection = getVoiceConnection(GUILD_ID)
+  const connection = getVoiceConnection(GUILD_ID);
   const player = createAudioPlayer();
-  const resource = createAudioResource('./audio.mp3', {
-    metadate: {
-      title: 'join announce'
-    }
-  });
-  connection.subscribe(player);
+  const resource = createAudioResource(createReadStream(join(__dirname, './audio.mp3')), {
+   inlineVolume : true 
+  })
+  resource.volume = 2;
   player.play(resource);
+  connection.subscribe(player);
   player.on('error', (e) =>  {
     console.error('エラー', e);
   });
+}
+
+function audioPlayMain(contents, joinUser) {
+  new Promise((resolve, reject) => {
+    resolve(callApi(contents));
+  }).then((url) => {
+    downloadAudio(url, joinUser);
+  }).then(() => {
+    setTimeout(() => {
+      playAudio();
+    }, intervalTime);
+  })
 }
 
 //APIを連続で叩かないようにする
@@ -172,35 +186,31 @@ const intervalTime = 1000;
 client.on("voiceStateUpdate", async (oldState, newState) => {
   const oldVoice = oldState.channelId;
   const newVoice = newState.channelId;
+
+
   const joinUser = oldState.member.user.username; //チャンネルに入ったユーザーの名前を取得
   const connection = getVoiceConnection(GUILD_ID);
-  
+
+
   if (oldVoice != newVoice) {
     if (oldVoice == null) { 
       if (connection && oldState.member.user.bot === true && timer > 5) {//botの場合
         timer = 0;
-        const contents = '私はログツーです。音声で入退出状況をお伝えします。'
+        const contents = '私はログツーです。音声で入退出状況をお伝えします。';
         new Promise((resolve, reject) => {
           resolve(callApi(contents));
         }).then((url) => {
-          downloadAudio(url, joinUser)
+          downloadAudio(url, joinUser);
         }).then(() => {
           setTimeout(() => {
             playAudio();
           }, intervalTime);
         })
-      } else if (connection && timer > 5) {
+      } else if (connection && timer > 4) {
+
         timer = 0;
         const contents = joinUser+"さんが入室しました。"
-        new Promise((resolve, reject) => {
-          resolve(callApi(contents));
-        }).then((url) => {
-          downloadAudio(url, joinUser)
-        }).then(() => {
-          setTimeout(() => {
-            playAudio();
-          }, intervalTime);  
-        })
+        audioPlayMain(contents, joinUser);
       }
       
       
@@ -209,45 +219,27 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       const activeUser = oldState.member.user;
       
       
-      if (membersInChannel === 1) {
-        oldState.guild.channels.cache.get(CALL_CHANNEL_ID).send(`@everyone`);
-      }
-      
     } else if (newVoice == null) {
-        if (connection && timer > 6) {
+        if (connection && timer > 4) {
           timer = 0
           if (oldState.member.user.bot != true) {
-            const contents = joinUser+"さんが退出しました。"
-            new Promise((resolve, reject) => {
-              resolve(callApi(contents));
-            }).then((url) => {
-              downloadAudio(url, joinUser)
-            }).then(() => {
-              setTimeout(() => {
-                playAudio();
-              }, intervalTime);
-            })
-        }
+            const contents = joinUser+"さんが退出しました。";
+            audioPlayMain(contents, joinUser);
+          }
       }
       
     } else {
+      if (connection && timer > 4) {
+          const oldVoiceChannel = oldState.guild.channels.cache.get(oldVoice).name;
+          const newVoiceChannel = newState.guild.channels.cache.get(newVoice).name;
 
-      if (connection && timer > 6) {
-        timer = 0
-        if (oldState.member.user.bot != true) {
-          const contents = newState.member.user+"が"+oldState.guild.channels.cache.get(oldVoice)+"から"+oldState.guild.channels.cache.get(newVoice)}+"へ移動しました。"
-            new Promise((resolve, reject) => {
-              resolve(callApi(contents));
-            }).then((url) => {
-              downloadAudio(url, joinUser)
-            }).then(() => {
-              setTimeout(() => {
-                playAudio();
-              }, intervalTime);
-            })
+        timer = 0;
+        const contents = joinUser+"が"+oldVoiceChannel+"から"+newVoiceChannel+"へ移動しました。";
+        audioPlayMain(contents, joinUser);
       }
     }
   }
+
 });
 
 
