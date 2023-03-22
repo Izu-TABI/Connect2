@@ -37,8 +37,6 @@ const client = new Client({
 
 const TOKEN = process.env.TOKEN
 const GUILD_ID = process.env.GUILD_ID
-const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID
-const CALL_CHANNEL_ID = process.env.CALL_CHANNEL_ID
 
 
 client.commands = new Collection();
@@ -167,6 +165,7 @@ let timer = 0;
 setInterval(() => {
   timer++;
 }, 1000)  
+const intervalTime = 1000;
 
 
 //log
@@ -188,7 +187,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
         }).then(() => {
           setTimeout(() => {
             playAudio();
-          }, 2000);
+          }, intervalTime);
         })
       } else if (connection && timer > 5) {
         timer = 0;
@@ -200,7 +199,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
         }).then(() => {
           setTimeout(() => {
             playAudio();
-          }, 2000);  
+          }, intervalTime);  
         })
       }
       
@@ -209,7 +208,6 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       const membersInChannel = voiceChannel.members.size;
       const activeUser = oldState.member.user;
       
-      oldState.guild.channels.cache.get(LOG_CHANNEL_ID).send(`${activeUser}が${oldState.guild.channels.cache.get(newVoice)}に参加しました。`);
       
       if (membersInChannel === 1) {
         oldState.guild.channels.cache.get(CALL_CHANNEL_ID).send(`@everyone`);
@@ -227,32 +225,31 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
             }).then(() => {
               setTimeout(() => {
                 playAudio();
-              }, 2000);
+              }, intervalTime);
             })
         }
       }
-      newState.guild.channels.cache.get(LOG_CHANNEL_ID).send(`${newState.member.user}が${oldState.guild.channels.cache.get(oldVoice)}から退出しました。`);
-      
       
     } else {
-      newState.guild.channels.cache.get(LOG_CHANNEL_ID).send(`${newState.member.user}が${oldState.guild.channels.cache.get(oldVoice)}から${oldState.guild.channels.cache.get(newVoice)}へ移動しました。`);
+
+      if (connection && timer > 6) {
+        timer = 0
+        if (oldState.member.user.bot != true) {
+          const contents = newState.member.user+"が"+oldState.guild.channels.cache.get(oldVoice)+"から"+oldState.guild.channels.cache.get(newVoice)}+"へ移動しました。"
+            new Promise((resolve, reject) => {
+              resolve(callApi(contents));
+            }).then((url) => {
+              downloadAudio(url, joinUser)
+            }).then(() => {
+              setTimeout(() => {
+                playAudio();
+              }, intervalTime);
+            })
+      }
     }
   }
 });
 
-client.on('channelCreate', (massage) => {
-  massage.guild.channels.cache.get(LOG_CHANNEL_ID).send(`新しいチャンネル「${massage}」が作成されました。`);
-});
-
-client.on("guildMemberAdd", member => {
-  if (member.guild.id !== GUILD_ID) return; // 指定のサーバー以外では動作しないようにする
-  member.guild.channels.cache.get(LOG_CHANNEL_ID).send(`${member.user}が$参加しました！`);
-});
-
-client.on("guildMemberRemove", member => {
-  if (member.guild.id !== GUILD_ID) return; // 指定のサーバー以外では動作しないようにする
-  member.guild.channels.cache.get(CALL_CHANNEL_ID).send(`${member.user.tag}が退出しました。`);
-});
 
 
 client.login(TOKEN);
