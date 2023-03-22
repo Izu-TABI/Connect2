@@ -22,7 +22,7 @@ module.exports = {
         await interaction.reply('Successfully!!\n')
     try {
       const voiceChannel = await interaction.options.getChannel('channel')
-      const connection = joinVoiceChannel({
+        const connection = joinVoiceChannel({
         channelId: voiceChannel.id,
         guildId: interaction.guild.id,
         adapterCreator: interaction.guild.voiceAdapterCreator,

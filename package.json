@@ -18,7 +18,6 @@
   },
   "keywords": [],
   "description": "When a member enters or exits a voice channel, the bot saves it to the text channel and announces it by voice.",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Izu-TABI/Connect2.git"
