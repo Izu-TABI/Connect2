@@ -11,12 +11,11 @@ The bot uses the VOICEVOX API for its voice.
 
 # Requirements
 
-* Node.js 16.13.2
+* Node.js 18.12.1
 * discord.js 14.7.1
 * discordjs/opus 0.8.0
 * discordjs/voice 0.14.0
 * dotenv 16.0.3
-* node-fetch 2.6.7
 * ffmpeg-static 5.1.0
 
 # Installation
@@ -28,8 +27,6 @@ $ npm install @discordjs/opus
 $ npm install @discordjs/voice
 
 $ npm install dotenv --save
-
-$ npm install node-fetch@2.6.7
 
 $ npm install ffmpeg-static
 
