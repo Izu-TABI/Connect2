@@ -5,6 +5,10 @@ When a member enters or exits a voice channel, the bot saves it to the text chan
 
 The bot uses the VOICEVOX API for its voice.
 
+# Sample voice
+
+<audio controls src="https://github.com/Izu-TABI/Connect2/blob/main/audio.mp3"></audio>
+
 # Requirements
 
 * Node.js 16.13.2
