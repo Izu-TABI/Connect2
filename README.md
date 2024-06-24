@@ -6,6 +6,8 @@ When a member enters or exits a voice channel, the bot saves it to the text chan
 The bot uses the VOICEVOX API for its voice(mp3).
 <br>
 
+# sample voice
+<a>https://github.com/Izu-TABI/Connect2/blob/main/audio.mp3</a>
 
 # Requirements
 
