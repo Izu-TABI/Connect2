@@ -3,7 +3,7 @@ When a member enters or exits a voice channel, the bot saves it to the text chan
 
 # Description
 
-The bot uses the VOICEVOX API for its voice.
+The bot uses the VOICEVOX API for its voice(mp3).
 <br>
 
 
