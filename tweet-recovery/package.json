@@ -1,0 +1,12 @@
+{
+  "name": "tweet-recovery",
+  "version": "0.1.0",
+  "private": true,
+  "description": "X (Twitter) で画面に表示されたツイートを自動で記録し、更新で見失ったツイートを後から探せるようにするツール",
+  "scripts": {
+    "test": "node test/e2e.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

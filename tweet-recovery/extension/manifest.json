@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Tweet Recovery - 見たツイート履歴",
+  "short_name": "Tweet Recovery",
+  "version": "0.1.0",
+  "description": "X (Twitter) で画面に表示されたツイートを自動でブラウザ内に記録し、更新で見失ったツイートを後から探せるようにします。",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*",
+        "https://mobile.x.com/*",
+        "https://mobile.twitter.com/*"
+      ],
+      "js": ["tweet-recovery.user.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tweet-recovery@izu-tabi.github.io",
+      "strict_min_version": "109.0"
+    }
+  }
+}
